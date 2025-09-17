@@ -52,4 +52,5 @@ The project is fully configured for zero-configuration deployment on Vercel. Aft
 ### What's Done vs. Skipped
 
 * **Done**: All core requirements, including full CRUD, pagination, search/filters, CSV import/export, basic authentication, and a clean UI.
-* **Skipped (Optional)**: We did not implement an "admin role" or advanced unit tests, as the focus was on delivering a fully functional core application.
+* **Skipped**: We did not implement an "admin role" or advanced unit tests, as the focus was on delivering a fully functional core application.
+
