@@ -16,7 +16,11 @@ interface SearchParams {
   timeline?: string;
 }
 
-const BuyersPage = async ({ searchParams }: { searchParams: SearchParams }) => {
+interface PageProps {
+  searchParams?: SearchParams;
+}
+
+const BuyersPage = async ({ searchParams = {} }: PageProps) => {
   const page = parseInt(searchParams.page || '1');
   const pageSize = 10;
   const skip = (page - 1) * pageSize;
@@ -79,4 +83,4 @@ const BuyersPage = async ({ searchParams }: { searchParams: SearchParams }) => {
   }
 };
 
-export default BuyersPage; 
+export default BuyersPage;
