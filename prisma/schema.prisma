@@ -1,0 +1,112 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  buyers    Buyer[]  @relation("UserBuyers")
+  histories BuyerHistory[] @relation("UserHistories")
+  createdAt DateTime @default(now())
+}
+
+model Buyer {
+  id           String        @id @default(uuid())
+  fullName     String
+  email        String?
+  phone        String
+  city         City
+  propertyType PropertyType
+  bhk          BHK?
+  purpose      Purpose
+  budgetMin    Int?
+  budgetMax    Int?
+  timeline     Timeline
+  source       Source
+  status       Status        @default(New)
+  notes        String?       @db.Text
+  tags         String[]      @default([])
+  ownerId      String
+  owner        User          @relation(fields: [ownerId], references: [id], name: "UserBuyers")
+  updatedAt    DateTime      @updatedAt
+  histories    BuyerHistory[] @relation("BuyerHistories")
+
+  @@index([updatedAt])
+  @@index([city, propertyType, status, timeline])
+  @@index([fullName])
+  @@index([phone])
+}
+
+model BuyerHistory {
+  id                String    @id @default(uuid())
+  buyerId           String
+  buyer             Buyer     @relation(fields: [buyerId], references: [id], name: "BuyerHistories")
+  changedBy         String    // This can store a user's name/email, as a string
+  changedByUserId   String?   // Foreign key to link to the User model
+  changedByRelation User?     @relation(fields: [changedByUserId], references: [id], name: "UserHistories")
+  changedAt         DateTime  @default(now())
+  diff              Json
+
+  @@index([changedByUserId])
+}
+
+enum City {
+  Chandigarh
+  Mohali
+  Zirakpur
+  Panchkula
+  Other
+}
+
+enum PropertyType {
+  Apartment
+  Villa
+  Plot
+  Office
+  Retail
+}
+
+enum BHK {
+  ONE
+  TWO
+  THREE
+  FOUR
+  STUDIO
+}
+
+enum Purpose {
+  Buy
+  Rent
+}
+
+enum Timeline {
+  ZERO_TO_3M
+  THREE_TO_6M
+  MORE_THAN_6M
+  EXPLORING
+}
+
+enum Source {
+  Website
+  Referral
+  Walk_in
+  Call
+  Other
+}
+
+enum Status {
+  New
+  Qualified
+  Contacted
+  Visited
+  Negotiation
+  Converted
+  Dropped
+}
