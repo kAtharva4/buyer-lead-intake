@@ -72,3 +72,9 @@ To run this project locally, follow these steps.
     * **Data Flow**: The Server Component model (`/buyers`) was chosen to offload data-intensive operations to the server, improving client-side performance.
     * **Access Control**: Ownership checks are hard-coded in the API routes for demo purposes, demonstrating the fundamental security principle of data ownership.
 * **Future Enhancements**: Optional features such as an admin role, unit tests, and optimistic UI updates were skipped to meet the core assignment deadline but could be implemented as a next step.
+
+* **What's Done vs. Skipped:**
+
+**Done**: All core requirements, including full CRUD, pagination, search/filters, CSV import/export, basic authentication, and a clean UI.
+
+**Skipped**: We did not implement an "admin role" or advanced unit tests, as the focus was on delivering a fully functional core application.
