@@ -7,29 +7,33 @@ import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
 
-const BuyersPage = async ({
-  searchParams,
-}: {
-  searchParams?: Record<string, string | string[] | undefined>;
-}) => {
-  const page = parseInt((searchParams?.page as string) || '1');
+// Correct Page Props typing for Next.js 15
+interface BuyersPageProps {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+}
+
+const BuyersPage = async ({ searchParams }: BuyersPageProps) => {
+  // Await the searchParams promise
+  const params = await searchParams;
+
+  const page = parseInt((params?.page as string) || '1');
   const pageSize = 10;
   const skip = (page - 1) * pageSize;
 
   const where: Prisma.BuyerWhereInput = {};
 
-  if (searchParams?.q) {
+  if (params?.q) {
     where.OR = [
-      { fullName: { contains: searchParams.q as string, mode: 'insensitive' } },
-      { phone: { contains: searchParams.q as string, mode: 'insensitive' } },
-      { email: { contains: searchParams.q as string, mode: 'insensitive' } },
+      { fullName: { contains: params.q as string, mode: 'insensitive' } },
+      { phone: { contains: params.q as string, mode: 'insensitive' } },
+      { email: { contains: params.q as string, mode: 'insensitive' } },
     ];
   }
 
-  if (searchParams?.city) where.city = searchParams.city as City;
-  if (searchParams?.propertyType) where.propertyType = searchParams.propertyType as PropertyType;
-  if (searchParams?.status) where.status = searchParams.status as Status;
-  if (searchParams?.timeline) where.timeline = searchParams.timeline as Timeline;
+  if (params?.city) where.city = params.city as City;
+  if (params?.propertyType) where.propertyType = params.propertyType as PropertyType;
+  if (params?.status) where.status = params.status as Status;
+  if (params?.timeline) where.timeline = params.timeline as Timeline;
 
   try {
     const [items, total] = await prisma.$transaction([
